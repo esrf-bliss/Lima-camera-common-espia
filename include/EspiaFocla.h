@@ -48,7 +48,7 @@ namespace Focla
 
 DEB_GLOBAL_NAMESPC(DebModFocla, "Espia::Focla");
 
-extern const std::string 
+extern const std::string
 	TRIG_MODE,
 	TRIG,
 	CAM_SEL,
@@ -107,7 +107,7 @@ void initSigName2IdxMap();
  * @brief Focla device class
  *
  *******************************************************************/
-class Dev 
+class Dev
 {
 	DEB_CLASS_NAMESPC(DebModFocla, "Dev", "Espia::Focla");
 
@@ -130,7 +130,7 @@ class Dev
 	void selectCamera( int cam_nb );
 
 	void getPixelPack( int cam_nb, std::string &pix_pack_str );
-	void setPixelPack( int cam_nb, int pix_pack=-1, 
+	void setPixelPack( int cam_nb, int pix_pack=-1,
 	                                  std::string pix_pack_str="Default" );
 
 	void getTestImage( int &val );
@@ -147,7 +147,7 @@ class Dev
 	void ccPulseStart( int cam_nb, int cc_nb, int polarity, int width_us,
 	                   int delay_us=0, int nb_pulse=1 );
 	void ccPulseStop( int cam_nb, int cc_nb );
-	void ccPulseStatus( int cam_nb, int cc_nb, int &pulse_active, 
+	void ccPulseStatus( int cam_nb, int cc_nb, int &pulse_active,
 	                    int &curr_pulse, int &curr_stage );
 
 	// XXX Do we need these three below?
@@ -160,7 +160,7 @@ class Dev
 	void open();
 	void close();
 
-	void checkMeta() throw(Exception);
+	void checkMeta();
 	int pIdxFromName( const std::string pname );
 	std::string pixelPackParName( int cam_nb );
 	std::string ccLevelParName( int cam_nb, int cc_nb );
@@ -199,10 +199,10 @@ class SerialLine : public HwSerialLine
 
 	virtual void getNbAvailBytes( int &nb_avail );
 
-	virtual void read( std::string& buffer, int max_len=Available, 
+	virtual void read( std::string& buffer, int max_len=Available,
 	           double timeout=TimeoutDefault );
 
-	virtual void readLine( std::string& buffer, int max_len, 
+	virtual void readLine( std::string& buffer, int max_len,
 	               double timeout=TimeoutDefault );
 
 	virtual void write( const std::string& buffer, bool no_wait=false );
