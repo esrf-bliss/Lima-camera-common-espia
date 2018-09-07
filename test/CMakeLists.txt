@@ -22,4 +22,3 @@
 
 set(test_src testfocla testfoclahwinterface)
 
-include(TestCamera)
