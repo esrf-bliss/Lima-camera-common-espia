@@ -111,7 +111,7 @@ const map<string, int> Espia::Focla::PixelPack(C_LIST_ITERS(PixelPackList));
 /* CL CC Levels: Low, High, Ext */
 static const int CCLevelArray[] = {2, 3, 0};
 
-const vector<int> Espia::Focla::CCLevel = 
+const vector<int> Espia::Focla::CCLevel =
 	vector<int>( CCLevelArray, CCLevelArray +
 		(sizeof(CCLevelArray)/sizeof(CCLevelArray[0])) );
 
@@ -243,12 +243,12 @@ int Espia::Focla::Dev::pIdxFromName( const string pname )
 }
 
 
-void Espia::Focla::Dev::checkMeta() throw(Exception)
+void Espia::Focla::Dev::checkMeta()
 {
 	DEB_MEMBER_FUNCT();
 
 	if( m_edev.isMeta() )
-		THROW_HW_ERROR(NotSupported) 
+		THROW_HW_ERROR(NotSupported)
 			<< "Operation not permitted on meta-devices!";
 }
 
@@ -387,14 +387,14 @@ void Espia::Focla::Dev::getPixelPack( int cam_nb, string &pix_pack_str )
  *
  * @see        PixelPackList, EspiaAcqLib.py
  *******************************************************************/
-void Espia::Focla::Dev::setPixelPack( int cam_nb, int pix_pack, 
+void Espia::Focla::Dev::setPixelPack( int cam_nb, int pix_pack,
                                       string pix_pack_str )
 {
 	DEB_MEMBER_FUNCT();
 
 	string pname = pixelPackParName( cam_nb );
 	if( -1 == pix_pack ) {
-		map<string,int>::const_iterator p = 
+		map<string,int>::const_iterator p =
 		                    Espia::Focla::PixelPack.find(pix_pack_str);
 		if( p != Espia::Focla::PixelPack.end() )
 			pix_pack = p->second;
@@ -487,7 +487,7 @@ string Espia::Focla::Dev::ccLevelParName( int cam_nb, int cc_nb )
  *
  * @see         CCLevel vector, EspiaAcqLib.py
  *******************************************************************/
-void Espia::Focla::Dev::ccLevelGet( int cam_nb, int cc_nb, 
+void Espia::Focla::Dev::ccLevelGet( int cam_nb, int cc_nb,
                                     unsigned int &cc_level )
 {
 	DEB_MEMBER_FUNCT();
@@ -514,7 +514,7 @@ void Espia::Focla::Dev::ccLevelGet( int cam_nb, int cc_nb,
  *
  * @see         CCLevel vector, EspiaAcqLib.py
  *******************************************************************/
-void Espia::Focla::Dev::ccLevelSet( int cam_nb, int cc_nb, 
+void Espia::Focla::Dev::ccLevelSet( int cam_nb, int cc_nb,
                                     unsigned int cc_level )
 {
 	DEB_MEMBER_FUNCT();
@@ -562,7 +562,7 @@ int Espia::Focla::Dev::sigNbFromName( const string sname )
  * @param[in]   delay_us  int
  * @param[in]   nb_pulse  int
  *******************************************************************/
-void Espia::Focla::Dev::ccPulseStart( int cam_nb, int cc_nb, int polarity, 
+void Espia::Focla::Dev::ccPulseStart( int cam_nb, int cc_nb, int polarity,
                                       int width_us, int delay_us, int nb_pulse )
 {
 	DEB_MEMBER_FUNCT();
@@ -571,7 +571,7 @@ void Espia::Focla::Dev::ccPulseStart( int cam_nb, int cc_nb, int polarity,
 	int sig_nb = sigNbFromName( sig_name );
 	int width_arr[2] = {width_us, delay_us};
 	int nb_stage = sizeof(width_arr) / sizeof(width_arr[0]);
-	CHECK_CALL( focla_sig_pulse_start( m_focla, cam_nb, sig_nb, polarity, 
+	CHECK_CALL( focla_sig_pulse_start( m_focla, cam_nb, sig_nb, polarity,
 	                                   width_arr, nb_stage, nb_pulse ) );
 }
 
@@ -601,14 +601,14 @@ void Espia::Focla::Dev::ccPulseStop( int cam_nb, int cc_nb )
  * @param[out]  curr_pulse   int reference
  * @param[out]  curr_stage   int reference
  *******************************************************************/
-void Espia::Focla::Dev::ccPulseStatus( int cam_nb, int cc_nb, int &pulse_active, 
+void Espia::Focla::Dev::ccPulseStatus( int cam_nb, int cc_nb, int &pulse_active,
                                        int &curr_pulse, int &curr_stage )
 {
 	DEB_MEMBER_FUNCT();
 
 	string sig_name = ccSignalName( cam_nb, cc_nb );
 	int sig_nb = sigNbFromName( sig_name );
-	CHECK_CALL( focla_sig_pulse_status( m_focla, cam_nb, sig_nb, 
+	CHECK_CALL( focla_sig_pulse_status( m_focla, cam_nb, sig_nb,
 				   &pulse_active, &curr_pulse, &curr_stage ) );
 }
 
@@ -715,7 +715,7 @@ void Espia::Focla::SerialLine::flush()
 /***************************************************************//**
  * @brief Get the number of bytes available for reading from Focla serial line
  *
- * @param[out]  nb_avail  int reference 
+ * @param[out]  nb_avail  int reference
  *******************************************************************/
 void Espia::Focla::SerialLine::getNbAvailBytes( int &nb_avail )
 {
@@ -730,7 +730,7 @@ void Espia::Focla::SerialLine::getNbAvailBytes( int &nb_avail )
 /***************************************************************//**
  * @brief Read max_len bytest from Focla serial line
  *******************************************************************/
-void Espia::Focla::SerialLine::read( string& buffer, int max_len, 
+void Espia::Focla::SerialLine::read( string& buffer, int max_len,
                                      double timeout )
 {
 	DEB_MEMBER_FUNCT();
@@ -745,7 +745,7 @@ void Espia::Focla::SerialLine::read( string& buffer, int max_len,
 	char *ptr = max_len ? (char *) buffer.data() : NULL;
 
 	unsigned long ret_len = max_len;
-	CHECK_CALL( focla_ser_read( m_fdev.getFocla(), ptr, &ret_len, 
+	CHECK_CALL( focla_ser_read( m_fdev.getFocla(), ptr, &ret_len,
 	                            timeout_us ) );
 	buffer.resize( ret_len );
 }
@@ -754,7 +754,7 @@ void Espia::Focla::SerialLine::read( string& buffer, int max_len,
 /***************************************************************//**
  * @brief Read from Focla serial line until line terminator
  *******************************************************************/
-void Espia::Focla::SerialLine::readLine( std::string& buffer, int max_len, 
+void Espia::Focla::SerialLine::readLine( std::string& buffer, int max_len,
                                          double timeout )
 {
 	DEB_MEMBER_FUNCT();
@@ -769,7 +769,7 @@ void Espia::Focla::SerialLine::readLine( std::string& buffer, int max_len,
 
 	unsigned long ret_len = max_len;
 	CHECK_CALL( focla_ser_read_str( m_fdev.getFocla(), ptr, &ret_len,
-	                                (char *)term.data(), term.size(), 
+	                                (char *)term.data(), term.size(),
 	                                timeout_us ) );
 	buffer.resize( ret_len );
 }
@@ -790,7 +790,7 @@ void Espia::Focla::SerialLine::write( const std::string& buffer, bool no_wait )
 
 	double block_delay; getBlockDelay( block_delay );
 
-	CHECK_CALL( focla_ser_write( m_fdev.getFocla(), ptr, &nb_wr_bytes, 
+	CHECK_CALL( focla_ser_write( m_fdev.getFocla(), ptr, &nb_wr_bytes,
 	                             block_size, getTimeoutUSec(block_delay),
 	                             !no_wait ) );
 }
