@@ -63,7 +63,7 @@ include(project_version)
 
 # Enable python binding code compilation using sip generator
 if (CAMERA_MASTER_PROJECT)
-  option(LIMA_ENABLE_PYTHON "compile python binding code?" LIMA_ENABLE_PYTHON)
+  option(LIMA_ENABLE_PYTHON "compile python binding code?" OFF)
 endif()
 
 if (LIMA_ENABLE_PYTHON)
