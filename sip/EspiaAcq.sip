@@ -92,6 +92,11 @@ using namespace lima;
 	void registerAcqEndCallback(Espia::AcqEndCallback& acq_end_cb);
 	void unregisterAcqEndCallback(Espia::AcqEndCallback& acq_end_cb);
 
+	void setSGImgConfig(Espia::SGImgConfig  sg_img_config,
+			    const Size& det_frame_size);
+	void getSGImgConfig(Espia::SGImgConfig& sg_img_config /Out/,
+			    Size& det_frame_size /Out/);
+
 	void setSGRoi(const Size& det_frame_size, const Roi& roi);
 	void getSGRoi(Size& det_frame_size /Out/, Roi& roi /Out/);
 

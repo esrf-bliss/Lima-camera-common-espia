@@ -336,3 +336,23 @@ void Dev::getChanUpLed(int& chan_up_led)
 }
 
 
+Meta::Meta(DevNbList dev_nb_list)
+	: Dev(MetaDev)
+{
+	DEB_CONSTRUCTOR();
+
+	DevNbList::const_iterator it, end = dev_nb_list.end();
+	for (it = dev_nb_list.begin(); it != end; ++it)
+		m_dev_list.push_back(new Dev(*it));
+
+	CHECK_CALL(espia_set_dev(*this, &dev_nb_list[0], dev_nb_list.size()));
+}
+
+void Meta::resetLink()
+{
+	DEB_MEMBER_FUNCT();
+
+	DevList::const_iterator it, end = m_dev_list.end();
+	for (it = m_dev_list.begin(); it != end; ++it)
+		(*it)->resetLink();
+}

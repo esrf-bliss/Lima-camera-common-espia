@@ -52,7 +52,7 @@ class Dev
 
  public:
 	Dev(int dev_nb);
-	~Dev();
+	virtual ~Dev();
 
 	operator espia_t();
 
@@ -62,7 +62,7 @@ class Dev
 	void registerCallback(struct espia_cb_data& cb_data, int& cb_nr);
 	void unregisterCallback(int& cb_nr);
 
-	void resetLink();
+	virtual void resetLink();
 	void getCcdStatus(int& ccd_status);
 
 	AutoMutex acqLock();
@@ -117,6 +117,36 @@ inline AutoMutex Dev::acqLock()
 	return AutoMutex(m_acq_mutex, AutoMutex::Locked);
 }
 
+
+class Meta : public Dev
+{
+	DEB_CLASS_NAMESPC(DebModEspia, "Meta", "Espia");
+
+ public:
+	typedef std::vector<int> DevNbList;
+	
+	Meta(DevNbList dev_nb_list);
+
+	virtual void resetLink();
+
+	int getNbDevs();
+	Dev& getDev(int dev_idx);
+
+ private:
+	typedef std::vector<AutoPtr<Dev> > DevList;
+
+	DevList m_dev_list;
+};
+
+inline int Meta::getNbDevs()
+{
+	return m_dev_list.size();
+}
+
+inline Dev& Meta::getDev(int dev_idx)
+{
+	return *m_dev_list.at(dev_idx);
+}
 
 } // namespace Espia
 

@@ -97,6 +97,11 @@ class Acq : public HwFrameCallbackGen, public EventCallbackGen
 	void registerAcqEndCallback(AcqEndCallback& acq_end_cb);
 	void unregisterAcqEndCallback(AcqEndCallback& acq_end_cb);
 
+	void setSGImgConfig(SGImgConfig  sg_img_config,
+			    const Size& det_frame_size);
+	void getSGImgConfig(SGImgConfig& sg_img_config,
+			    Size& det_frame_size);
+
 	void setSGRoi(const Size& det_frame_size, const Roi& roi);
 	void getSGRoi(Size& det_frame_size, Roi& roi);
 
@@ -122,7 +127,9 @@ class Acq : public HwFrameCallbackGen, public EventCallbackGen
 
 	AutoMutex acqLock();
 
-	void setupSGRoi(const Size& det_frame_size, const Roi& sg_roi);
+	bool isSGRoiValid(const Size& det_frame_size, const Roi& sg_roi);
+	bool isSGRoiActive(const Size& det_frame_size, const Roi& sg_roi);
+	void setupSG();
 
 	Dev& m_dev;
 
@@ -132,6 +139,7 @@ class Acq : public HwFrameCallbackGen, public EventCallbackGen
 	int m_real_frame_factor;
 	int m_real_frame_size;
 	Size m_det_frame_size;
+	SGImgConfig m_sg_img_config;
 	Roi m_sg_roi;
 
 	int m_nb_frames;
@@ -178,6 +186,19 @@ inline void Acq::getStartTimestamp(Timestamp& start_ts)
 inline AutoMutex Acq::acqLock()
 {
 	return m_dev.acqLock();
+}
+
+inline bool Acq::isSGRoiValid(const Size& det_frame_size, const Roi& sg_roi)
+{
+	return sg_roi.isEmpty() || isSGRoiActive(det_frame_size, sg_roi);
+}
+
+inline bool Acq::isSGRoiActive(const Size& det_frame_size, const Roi& sg_roi)
+{
+	int roi_area = Point(sg_roi.getSize()).getArea();
+	int det_area = Point(det_frame_size).getArea();
+	bool dest_size_match = (sg_roi.getSize() == m_frame_dim.getSize());
+	return !sg_roi.isEmpty() && (roi_area < det_area) && dest_size_match;
 }
 
 } // namespace Espia

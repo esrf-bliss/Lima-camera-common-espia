@@ -31,12 +31,12 @@ using namespace lima;
 %End
  public:
 	Dev(int dev_nb);
-	~Dev();
+	virtual ~Dev();
 
 	int getDevNb();
 	bool isMeta();
 
-	void resetLink();
+	virtual void resetLink();
 	void getCcdStatus(int& ccd_status);
 
 	void setDebugLevels(int  lib_deb_lvl,       int  drv_deb_lvl);
@@ -53,6 +53,21 @@ using namespace lima;
 	void setParam(const std::string &param_name, int val );
 
 	void getChanUpLed(int &chan_up_led /Out/);
+};
+
+class Meta : public Espia::Dev
+{
+%TypeHeaderCode
+#include <EspiaDev.h>
+using namespace lima;
+%End
+ public:
+	Meta(std::vector<int> dev_nb_list);
+
+	virtual void resetLink();
+
+	int getNbDevs();
+	Espia::Dev& getDev(int dev_idx);
 };
 
 }; // namespace Espia
