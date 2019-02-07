@@ -22,8 +22,22 @@
 #include "Espia.h"
 
 using namespace lima;
+using namespace lima::Espia;
 using namespace std;
 
+
+std::ostream& lima::Espia::operator <<(std::ostream& os, SGImgConfig img_config)
+{
+	const char *name = "Unknown";
+	switch (img_config) {
+	case SGImgNorm:           name = "SGImgNorm";           break;
+	case SGImgFlipVert1:      name = "SGImgFlipVert1";      break;
+	case SGImgFlipVert2:      name = "SGImgFlipVert2";      break;
+	case SGImgConcatVert2:    name = "SGImgConcatVert2";    break;
+	case SGImgConcatVertInv2: name = "SGImgConcatVertInv2"; break;
+	}
+	return os << name;
+}
 
 string lima::Espia::StrError(int ret)
 {

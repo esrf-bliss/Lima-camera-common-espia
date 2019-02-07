@@ -45,6 +45,14 @@ enum Register {
 	RegPixelCount		= 0x28, // 10 * 4
 };
 
+enum SGImgConfig {
+	SGImgNorm,
+	SGImgFlipVert1,
+	SGImgFlipVert2,
+	SGImgConcatVert2,
+	SGImgConcatVertInv2,
+};
+
 unsigned long Sec2USec(double sec);
 double USec2Sec(unsigned long usec);
 std::string StrError(int ret);

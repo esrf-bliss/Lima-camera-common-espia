@@ -54,6 +54,16 @@ enum Register {
 	RegPixelCount		= 0x28, // 10 * 4
 };
 
+enum SGImgConfig {
+	SGImgNorm,
+	SGImgFlipVert1,
+	SGImgFlipVert2,
+	SGImgConcatVert2,
+	SGImgConcatVertInv2,
+};
+
+std::ostream& operator <<(std::ostream& os, SGImgConfig img_config);
+
 inline unsigned long Sec2USec(double sec)
 {
 	if (sec > 0)

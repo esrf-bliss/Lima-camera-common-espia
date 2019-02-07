@@ -81,6 +81,7 @@ Acq::Acq(Dev& dev)
 		os << "Acq#" << dev.getDevNb();
 	DEB_SET_OBJ_NAME(os.str());
 
+	m_sg_img_config = SGImgNorm;
 	m_nb_buffers = m_nb_buffer_frames = 0;
 	m_real_frame_factor = m_real_frame_size = 0;
 	
@@ -320,8 +321,7 @@ void Acq::bufferAlloc(int& nb_buffers, int nb_buffer_frames,
 	m_real_frame_factor = frame_factor;
 	m_real_frame_size   = real_frame_size;
 
-	if (!m_sg_roi.isEmpty())
-		setupSGRoi(m_det_frame_size, m_sg_roi);
+	setupSG();
 
 	DEB_RETURN() << DEB_VAR1(nb_buffers);
 }
@@ -545,16 +545,46 @@ void Acq::unregisterAcqEndCallback(AcqEndCallback& acq_end_cb)
 	acq_end_cb.setAcq(NULL);
 }
 
+void Acq::setSGImgConfig(SGImgConfig sg_img_config,
+			 const Size& det_frame_size)
+{
+	DEB_MEMBER_FUNCT();
+	DEB_PARAM() << DEB_VAR4(sg_img_config, det_frame_size,
+				m_det_frame_size, m_sg_roi);
+
+	bool roi_active = isSGRoiActive(m_det_frame_size, m_sg_roi);
+	if (roi_active && (sg_img_config != SGImgNorm))
+		THROW_HW_ERROR(NotSupported)
+			<< "SGRoi is active: only available with SGImgNorm";
+
+	m_sg_img_config = sg_img_config;
+	m_det_frame_size = det_frame_size;
+	setupSG();
+}
+
+void Acq::getSGImgConfig(SGImgConfig& sg_img_config,
+			 Size& det_frame_size)
+{
+	DEB_MEMBER_FUNCT();
+	sg_img_config = m_sg_img_config;
+	det_frame_size = m_det_frame_size;
+	DEB_RETURN() << DEB_VAR2(sg_img_config, det_frame_size);
+}
+
 void Acq::setSGRoi(const Size& det_frame_size, const Roi& sg_roi)
 {
 	DEB_MEMBER_FUNCT();
-	DEB_PARAM() << DEB_VAR2(det_frame_size, sg_roi);
+	DEB_PARAM() << DEB_VAR3(m_sg_img_config, det_frame_size, sg_roi);
 
-	m_det_frame_size = det_frame_size;
+	bool roi_active = isSGRoiActive(det_frame_size, sg_roi);
+	if (roi_active && (m_sg_img_config != SGImgNorm))
+		THROW_HW_ERROR(NotSupported)
+			<< "SGRoi only available with SGImgNorm";
+
+	if (roi_active)
+		m_det_frame_size = det_frame_size;
 	m_sg_roi = sg_roi;
-	bool size_match = (sg_roi.getSize() == m_frame_dim.getSize());
-	if ((m_nb_buffers > 0) && (sg_roi.isEmpty() || size_match))
-		setupSGRoi(det_frame_size, m_sg_roi);
+	setupSG();
 }
 
 void Acq::getSGRoi(Size& det_frame_size, Roi& sg_roi)
@@ -565,39 +595,40 @@ void Acq::getSGRoi(Size& det_frame_size, Roi& sg_roi)
 	DEB_RETURN() << DEB_VAR2(det_frame_size, sg_roi);
 }
 
-void Acq::setupSGRoi(const Size& det_frame_size, const Roi& sg_roi)
+void Acq::setupSG()
 {
 	DEB_MEMBER_FUNCT();
-	DEB_PARAM() << DEB_VAR3(det_frame_size, sg_roi, m_frame_dim);
+	DEB_PARAM() << DEB_VAR4(m_sg_img_config, m_det_frame_size, m_sg_roi,
+				m_frame_dim);
+
+	if ((m_nb_buffers == 0) || !isSGRoiValid(m_det_frame_size, m_sg_roi))
+		return;
 
 	struct scdxipci_sg_table *sg_list;
 	struct espia_frame_dim eframe_dim;
 	struct espia_roi eroi, *eroi_ptr;
 
-	eframe_dim.width  = det_frame_size.getWidth();
-	eframe_dim.height = det_frame_size.getHeight();
+	eframe_dim.width  = m_det_frame_size.getWidth();
+	eframe_dim.height = m_det_frame_size.getHeight();
 	eframe_dim.depth  = m_frame_dim.getDepth();
 
-	if (sg_roi.isEmpty()) {
-		eroi_ptr = NULL;
-	} else {
-		Size roi_size = sg_roi.getSize();
-		eroi.left   = sg_roi.getTopLeft().x;
-		eroi.top    = sg_roi.getTopLeft().y;
+	if (isSGRoiActive(m_det_frame_size, m_sg_roi)) {
+		Size roi_size = m_sg_roi.getSize();
+		eroi.left   = m_sg_roi.getTopLeft().x;
+		eroi.top    = m_sg_roi.getTopLeft().y;
 		eroi.width  = roi_size.getWidth();
 		eroi.height = roi_size.getHeight();
 		eroi_ptr    = &eroi;
+	} else {
+		eroi_ptr = NULL;
 	}
 
 	int nr_dev;
-	CHECK_CALL(espia_create_sg(m_dev, ESPIA_SG_NORM, &eframe_dim, eroi_ptr,
-				   &sg_list, &nr_dev));
+	CHECK_CALL(espia_create_sg(m_dev, m_sg_img_config, &eframe_dim,
+				   eroi_ptr, &sg_list, &nr_dev));
 	try {
-		if (nr_dev > 1)
-			THROW_HW_ERROR(Error) << "espia_create_sg retured "
-					      << DEB_VAR1(nr_dev);
-
-		CHECK_CALL(espia_set_sg(m_dev, 0, &sg_list[0]));
+		for (int i = 0; i < nr_dev; ++i)
+			CHECK_CALL(espia_set_sg(m_dev, i, &sg_list[i]));
 	} catch (...) {
 		espia_release_sg(m_dev, sg_list, nr_dev);
 		throw;
