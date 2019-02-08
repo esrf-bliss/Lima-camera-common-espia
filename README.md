@@ -1,8 +1,8 @@
 [![License](https://img.shields.io/github/license/esrf-bliss/lima.svg?style=flat)](https://opensource.org/licenses/GPL-3.0)
 [![Gitter](https://img.shields.io/gitter/room/esrf-bliss/lima.svg?style=flat)](https://gitter.im/esrf-bliss/LImA)
-[![Conda](https://img.shields.io/conda/dn/esrf-bcu/lima-camera-espia.svg?style=flat)](https://anaconda.org/esrf-bcu)
-[![Version](https://img.shields.io/conda/vn/esrf-bcu/lima-camera-espia.svg?style=flat)](https://anaconda.org/esrf-bcu)
-[![Platform](https://img.shields.io/conda/pn/esrf-bcu/lima-camera-espia.svg?style=flat)](https://anaconda.org/esrf-bcu)
+[![Conda](https://img.shields.io/conda/dn/esrf-bcu/lima-common-espia.svg?style=flat)](https://anaconda.org/esrf-bcu)
+[![Version](https://img.shields.io/conda/vn/esrf-bcu/lima-common-espia.svg?style=flat)](https://anaconda.org/esrf-bcu)
+[![Platform](https://img.shields.io/conda/pn/esrf-bcu/lima-common-espia.svg?style=flat)](https://anaconda.org/esrf-bcu)
 
 # LImA Espia DAQ board Plugin
 
@@ -12,7 +12,7 @@ This is the LImA plugin for the Espia DAQ board. It is entended to be used with 
 
 ### Camera python
 
-conda install -c esrf-bcu lima-camera-espia
+conda install -c esrf-bcu lima-common-espia
 
 # LImA
 
