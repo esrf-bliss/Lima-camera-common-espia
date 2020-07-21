@@ -557,6 +557,10 @@ void Acq::setSGImgConfig(SGImgConfig sg_img_config,
 		THROW_HW_ERROR(NotSupported)
 			<< "SGRoi is active: only available with SGImgNorm";
 
+	if ((m_sg_img_config != sg_img_config) ||
+	    (m_det_frame_size != det_frame_size))
+		bufferFree();
+
 	m_sg_img_config = sg_img_config;
 	m_det_frame_size = det_frame_size;
 	setupSG();
