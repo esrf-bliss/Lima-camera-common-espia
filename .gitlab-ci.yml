@@ -13,9 +13,9 @@ stages:
 build-linux:
   <<: *build-conda
   script:
-    - conda mambabuild ./conda/camera --prefix-length=80 --output-folder=dist/ -c conda-forge --channel=http://bcu-ci.esrf.fr/stable
+    - conda build ./conda/camera --prefix-length=80 --output-folder=dist/ -c conda-forge --channel=http://bcu-ci.esrf.fr/stable
   tags:
-    - linux
+    - cos7
 
 deploy-devel:
   stage: deploy
@@ -29,7 +29,7 @@ deploy-devel:
     - conda index /conda-devel/
   tags:
     - conda
-    - linux
+    - cos7
   only:
     - branches
   except:
@@ -48,6 +48,6 @@ deploy-stable:
     - conda index /conda/
   tags:
     - conda
-    - linux
+    - cos7
   only:
     - tags
