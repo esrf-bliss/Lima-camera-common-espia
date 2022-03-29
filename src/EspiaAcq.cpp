@@ -557,6 +557,10 @@ void Acq::setSGImgConfig(SGImgConfig sg_img_config,
 		THROW_HW_ERROR(NotSupported)
 			<< "SGRoi is active: only available with SGImgNorm";
 
+	if ((m_sg_img_config != sg_img_config) ||
+	    (m_det_frame_size != det_frame_size))
+		bufferFree();
+
 	m_sg_img_config = sg_img_config;
 	m_det_frame_size = det_frame_size;
 	setupSG();
@@ -577,11 +581,12 @@ void Acq::setSGRoi(const Size& det_frame_size, const Roi& sg_roi)
 	DEB_PARAM() << DEB_VAR3(m_sg_img_config, det_frame_size, sg_roi);
 
 	bool roi_active = isSGRoiActive(det_frame_size, sg_roi);
-	if (roi_active && (m_sg_img_config != SGImgNorm))
+	bool img_config_has_sg = (m_sg_img_config != SGImgNorm);
+	if (roi_active && img_config_has_sg)
 		THROW_HW_ERROR(NotSupported)
 			<< "SGRoi only available with SGImgNorm";
 
-	if (roi_active)
+	if (roi_active || img_config_has_sg)
 		m_det_frame_size = det_frame_size;
 	m_sg_roi = sg_roi;
 	setupSG();
