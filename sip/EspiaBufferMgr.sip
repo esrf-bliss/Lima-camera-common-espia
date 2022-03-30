@@ -78,10 +78,13 @@ class BufferMgr : BufferCbMgr
 			
 	protected:
 		BufferMgr& m_buffer_mgr;
+	private:
+		FrameCallback(const Espia::FrameCallback&);
 	};
 */
 	virtual void setFrameCallbackActive(bool cb_active);
-	
+private:
+	BufferMgr(const Espia::BufferMgr&);
 };
 
 
