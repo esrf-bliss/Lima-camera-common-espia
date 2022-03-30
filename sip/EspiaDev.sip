@@ -53,6 +53,9 @@ using namespace lima;
 	void setParam(const std::string &param_name, int val );
 
 	void getChanUpLed(int &chan_up_led /Out/);
+
+ private:
+	Dev(const Espia::Dev&);
 };
 
 class Meta : public Espia::Dev
@@ -68,6 +71,9 @@ using namespace lima;
 
 	int getNbDevs();
 	Espia::Dev& getDev(int dev_idx);
+
+ private:
+	Meta(const Espia::Meta&);
 };
 
 }; // namespace Espia

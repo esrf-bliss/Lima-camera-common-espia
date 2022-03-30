@@ -102,6 +102,9 @@ using namespace lima;
 
  protected:
 	virtual void setFrameCallbackActive(bool cb_active);
+
+ private:
+	Acq(const Espia::Acq&);
 };
 
 }; // namespace Espia

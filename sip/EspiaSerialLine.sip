@@ -52,6 +52,8 @@ class SerialLine : HwSerialLine
 
 	virtual void getNbAvailBytes( int &avail_bytes /Out/ );
 
+  private:
+	SerialLine(const Espia::SerialLine&);
 };
 
 
