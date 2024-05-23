@@ -75,9 +75,8 @@ bool FoclaFrameCallback::newFrameReady( const HwFrameInfoType &frame_info )
 	aNewData.dimensions.push_back(aSize.getHeight());
 	aNewData.type = Data::UINT16;
 	
-	Buffer *aNewBuffer = new Buffer();
-	aNewBuffer->owner = Buffer::MAPPED;
-	aNewBuffer->data = (void*)frame_info.frame_ptr;
+	std::function<void(void *)> empty_deleter;
+	BufferBase *aNewBuffer = new MappedBuffer(frame_info.frame_ptr, empty_deleter);
 	aNewData.setBuffer(aNewBuffer);
 	aNewBuffer->unref();
 
