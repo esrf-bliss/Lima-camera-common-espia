@@ -18,8 +18,8 @@ build:
 requirements:
   host:
     - python {{ python }}
-    - sip 4.19* # API v12.7
-    - lima-core 1.10.*
+    - lima-sip6 13 
+    - lima-core 1.11*
     - espia
   build:
     - ninja
@@ -27,13 +27,13 @@ requirements:
     - {{ compiler('cxx') }}
   run:
     - python
-    - {{ pin_compatible('sip', min_pin='x.x.x', max_pin='x') }}
+    - {{ pin_compatible('lima-sip6', min_pin='x.x.x', max_pin='x') }}
     - {{ pin_compatible('lima-core', max_pin='x.x') }}
     - espia
 
 test:
   imports:
-    - Lima.Espia
+    - lima.espia
 
 about:
   home: https://github.com/esrf-bliss/Lima

@@ -1,7 +1,7 @@
 ###########################################################################
 # This file is part of LImA, a Library for Image Acquisition
 #
-#  Copyright (C) : 2009-2025
+#  Copyright (C) : 2009-2026
 #  European Synchrotron Radiation Facility
 #  CS40220 38043 Grenoble Cedex 9
 #  FRANCE
@@ -22,7 +22,7 @@
 #  along with this program; if not, see <http://www.gnu.org/licenses/>.
 ############################################################################
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 4.0)
 
 project(espia)
 
@@ -110,7 +110,7 @@ target_link_libraries(espia PUBLIC ${ESPIA_LIBRARIES})
 
 # Binding code for python
 if(LIMA_ENABLE_PYTHON)
-  limatools_run_sip_for_camera(espia)
+  limatools_run_sip_for_camera(espia 2)
 endif()
 
 # Generate and install package config file and version
@@ -161,7 +161,7 @@ if(LIMA_ENABLE_PYTHON)
 
   install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python/
-    DESTINATION "$<PATH:CMAKE_PATH,NORMALIZE,${Python3_SITEARCH}/Lima/Espia>"
+    DESTINATION "$<PATH:CMAKE_PATH,NORMALIZE,${Python3_SITEARCH}/lima/espia>"
   )
 endif()
 
