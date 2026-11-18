@@ -57,6 +57,20 @@ BufferMgr::Cap BufferMgr::getCap()
 	return Basic | Concat;
 }
 
+void BufferMgr::setAllocParameters(const AllocParameters& alloc_params)
+{
+	DEB_MEMBER_FUNCT();
+	DEB_PARAM() << DEB_VAR1(alloc_params);
+	m_alloc_params = alloc_params;
+}
+
+void BufferMgr::getAllocParameters(AllocParameters& alloc_params)
+{
+	DEB_MEMBER_FUNCT();
+	alloc_params = m_alloc_params;
+	DEB_RETURN() << DEB_VAR1(alloc_params);
+}
+
 int BufferMgr::getMaxNbBuffers(const FrameDim& frame_dim,
 			       int nb_concat_frames)
 {
@@ -65,15 +79,16 @@ int BufferMgr::getMaxNbBuffers(const FrameDim& frame_dim,
 
 	FrameDim xfer_frame_dim;
 	int xfer_concat_frames;
-	getXferParams(frame_dim, nb_concat_frames, 
+	getXferParams(frame_dim, nb_concat_frames,
 		      xfer_frame_dim, xfer_concat_frames);
 
 	FrameDim buffer_frame_dim;
-	getBufferFrameDim(xfer_frame_dim, xfer_concat_frames, 
+	getBufferFrameDim(xfer_frame_dim, xfer_concat_frames,
 			  buffer_frame_dim);
 	DEB_TRACE() << DEB_VAR1(buffer_frame_dim);
 
-	int max_nb_buffers = GetDefMaxNbBuffers(buffer_frame_dim);
+	int max_nb_buffers = m_alloc_params.getDefMaxNbBuffers(
+					buffer_frame_dim.getMemSize());
 	DEB_RETURN() << DEB_VAR1(max_nb_buffers);
 	return max_nb_buffers;
 }

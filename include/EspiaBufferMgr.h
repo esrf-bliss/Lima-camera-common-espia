@@ -36,6 +36,8 @@ class BufferMgr : public BufferCbMgr
 	DEB_CLASS_NAMESPC(DebModEspia, "BufferMgr", "Espia");
 
  public:
+	typedef BufferHelper::Parameters AllocParameters;
+
 	enum CamMultiFrameXferMode {
 		NoCamMultiFrameXfer,
 		CamMultiFrameXfer,
@@ -45,6 +47,9 @@ class BufferMgr : public BufferCbMgr
 	virtual ~BufferMgr();
 
 	virtual Cap getCap();
+
+	virtual void setAllocParameters(const AllocParameters& alloc_params);
+	virtual void getAllocParameters(      AllocParameters& alloc_params);
 
 	virtual int getMaxNbBuffers(const FrameDim& frame_dim,
 				    int nb_concat_frames);
@@ -94,6 +99,7 @@ class BufferMgr : public BufferCbMgr
 	int m_frames_per_xfer;
 	CamMultiFrameXferMode m_cam_xfer_mode;
 	FrameDim m_frame_dim;
+	AllocParameters m_alloc_params;
 };
 
 } // namespace Espia

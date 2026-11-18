@@ -121,6 +121,10 @@ void test_focla_hw_interface()
 	HwBufferCtrlObj *hw_buffer;
 	hw_inter.getHwCtrlObj(hw_buffer);
 
+	HwBufferCtrlObj::AllocParameters alloc_params;
+	alloc_params.reqMemSizePercent = 70.0;
+	hw_buffer->setAllocParameters(alloc_params);
+
 	FrameDim frame_dim(1024, 1024, Bpp16);
 	hw_buffer->setFrameDim(frame_dim);
 	int max_nb_buffers;

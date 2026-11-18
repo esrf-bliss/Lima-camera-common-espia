@@ -133,6 +133,22 @@ BufferCtrlObj::~BufferCtrlObj()
 }
 
 
+void BufferCtrlObj::setAllocParameters(const AllocParameters &alloc_params)
+{
+	Espia::BufferMgr& espia_buffer_mgr =
+		static_cast<Espia::BufferMgr&>(m_buffer_mgr.getAcqBufferMgr());
+	espia_buffer_mgr.setAllocParameters(alloc_params);
+}
+
+
+void BufferCtrlObj::getAllocParameters(AllocParameters &alloc_params)
+{
+	Espia::BufferMgr& espia_buffer_mgr =
+		static_cast<Espia::BufferMgr&>(m_buffer_mgr.getAcqBufferMgr());
+	espia_buffer_mgr.getAllocParameters(alloc_params);
+}
+
+
 void BufferCtrlObj::setFrameDim(const FrameDim &frame_dim)
 {
 	m_buffer_mgr.setFrameDim(frame_dim);

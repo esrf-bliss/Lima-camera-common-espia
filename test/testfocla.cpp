@@ -50,6 +50,10 @@ int main(int argc, char *argv[])
 	Espia::BufferMgr espia_buffer_mgr(espia_acq);
 	BufferCtrlMgr buffer_mgr(espia_buffer_mgr);
 
+	Espia::BufferMgr::AllocParameters alloc_params;
+	alloc_params.reqMemSizePercent = 70.0;
+	espia_buffer_mgr.setAllocParameters(alloc_params);
+
 
 	for( map<string, int>::iterator p = 
 	            Espia::Focla::ParamName2IdxMap.begin();
